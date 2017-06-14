@@ -131,8 +131,8 @@ public class Strassen {
 				P[i2][j2] = C[i1][j1];
 	}
 
-	public static int[][] matrixCreation(int size) {
-		int[][] a = new int[size][size];
+	public static int[][] matrixCreation(double size) {
+		int[][] a = new int[(int) size][(int) size];
 
 		Random random = new Random();
 
@@ -168,47 +168,48 @@ public class Strassen {
 										 * N; j++) B[i][j] = scan.nextInt();
 										 */
 
-		int n = 8;
-		//long timeComplexity1 = 0;
-		//long timeComplexity2 = 0;
+		int n = 0;
+		long timeComplexity1 = 0;
+		long timeComplexity2 = 0;
 		
-		//while(timeComplexity1 <= timeComplexity2){
+		while(timeComplexity1 <= timeComplexity2 || timeComplexity2 <= 0){
 		
-		int[][] a = matrixCreation(2^n);
-		int[][] b = matrixCreation(2^n);
+		int[][] a = matrixCreation(Math.pow(2,n));
+		int[][] b = matrixCreation(Math.pow(2,n));
 
 		// ******************************************************//
 
 		System.out.println("strassen: A x B");
-		long timeComplexity1 = System.currentTimeMillis();
+		timeComplexity1 = System.currentTimeMillis();
 		int[][] C = s.multiply(a, b);		
 		timeComplexity1 = System.currentTimeMillis() - timeComplexity1;
 		System.out.println("time1 = " + timeComplexity1);
 		
 
 		System.out.println("normal: A x B");
-		long timeComplexity2 = System.currentTimeMillis();
+		timeComplexity2 = System.currentTimeMillis();
 		s.traditionalMultiply(a, b);
 		//System.out.println("time = " + (System.currentTimeMillis() - timeComplexity));
 		timeComplexity2 = System.currentTimeMillis() - timeComplexity2;
 		System.out.println("time2 = " + timeComplexity2);
 		
-		//n++;
+		n++;
 
 		// ******************************************************//
+		}
 
 		 //int[][] C = s.multiply(A, B);
 		
 		 //System.out.println("\nProduct of matrices A and B : ");
-		 for (int i = 0; i < a.length; i++)
-		 {
-		 for (int j = 0; j < a.length; j++)
-		 System.out.print(C[i][j] +" ");
-		 System.out.println();
-		 }
+//		 for (int i = 0; i < a.length; i++)
+//		 {
+//		 for (int j = 0; j < a.length; j++)
+//		 System.out.print(C[i][j] +" ");
+//		 System.out.println();
+//		 }
 		
 		
-		//System.out.println("size: " + a.length);
+		System.out.println("size: " + Math.pow(2,n));
 
 	}
 }
