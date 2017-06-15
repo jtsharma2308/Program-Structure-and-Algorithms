@@ -1,5 +1,8 @@
 package traditionalMethod;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -39,9 +42,13 @@ public class Strassen {
 			split(B, B22, n / 2, n / 2);
 
 			/**
-			 * M1 = (A11 + A22)(B11 + B22) M2 = (A21 + A22) B11 M3 = A11 (B12 -
-			 * B22) M4 = A22 (B21 - B11) M5 = (A11 + A12) B22 M6 = (A21 - A11)
-			 * (B11 + B12) M7 = (A12 - A22) (B21 + B22)
+			 * M1 = (A11 + A22)(B11 + B22) 
+			 * M2 = (A21 + A22) B11 
+			 * M3 = A11 (B12 - B22)
+			 * M4 = A22 (B21 - B11) 
+			 * M5 = (A11 + A12) B22 
+			 * M6 = (A21 - A11)(B11 + B12) 
+			 * M7 = (A12 - A22) (B21 + B22)
 			 **/
 
 			int[][] M1 = multiply(add(A11, A22), add(B11, B22));
@@ -53,8 +60,10 @@ public class Strassen {
 			int[][] M7 = multiply(sub(A12, A22), add(B21, B22));
 
 			/**
-			 * C11 = M1 + M4 - M5 + M7 C12 = M3 + M5 C21 = M2 + M4 C22 = M1 - M2
-			 * + M3 + M6
+			 * C11 = M1 + M4 - M5 + M7 
+			 * C12 = M3 + M5 
+			 * C21 = M2 + M4 
+			 * C22 = M1 - M2 + M3 + M6
 			 **/
 			int[][] C11 = add(sub(add(M1, M4), M5), M7);
 			int[][] C12 = add(M3, M5);
@@ -72,7 +81,7 @@ public class Strassen {
 	}
 
 	/** Function to traditional matrix multiplication **/
-	public void traditionalMultiply(int[][] a, int[][] b) {
+	public static int[][] traditionalMultiply(int[][] a, int[][] b) {
 		int n = a.length;
 		int[][] c = new int[n][n];
 		int i, j;
@@ -85,16 +94,7 @@ public class Strassen {
 				}
 			}
 		}
-		// System.out.println("Matrix multiplication by regular method : ");
-		// System.out.println();
-		// for(i=0;i<a.length;i++)
-		// {
-		// for(j =0; j<a.length;j++)
-		// {
-		// System.out.print(c[i][j] + " ");
-		// }
-		// System.out.println();
-		// }
+		return c;
 	}
 
 	/** Funtion to sub two matrices **/
@@ -147,69 +147,172 @@ public class Strassen {
 
 	/** Main function **/
 	public static void main(String[] args) {
-		Scanner scan = new Scanner(System.in);
-		System.out.println("Strassen Multiplication Algorithm Test\n");
-		/** Make an object of Strassen class **/
+		
+		algo1();
+		algo2();
+		
 		Strassen s = new Strassen();
 
-		/*
-		 * System.out.println("Enter order n :"); int N = scan.nextInt();
-		 *//** Accept two 2d matrices **//*
-										 * System.out.
-										 * println("Enter N order matrix 1\n");
-										 * int[][] A = new int[N][N]; for (int i
-										 * = 0; i < N; i++) for (int j = 0; j <
-										 * N; j++) A[i][j] = scan.nextInt();
-										 * 
-										 * System.out.
-										 * println("Enter N order matrix 2\n");
-										 * int[][] B = new int[N][N]; for (int i
-										 * = 0; i < N; i++) for (int j = 0; j <
-										 * N; j++) B[i][j] = scan.nextInt();
-										 */
+		int n = 1;
+		long traditionalTime = 0;
+		long strassenTime = 0;
+		double breakPoint = 0;
 
-		int n = 0;
-		long timeComplexity1 = 0;
-		long timeComplexity2 = 0;
+// Finding breakpoint//
 		
-		while(timeComplexity1 <= timeComplexity2 || timeComplexity2 <= 0){
-		
-		int[][] a = matrixCreation(Math.pow(2,n));
-		int[][] b = matrixCreation(Math.pow(2,n));
+		while(traditionalTime <= strassenTime){
+			//while(n > 0){
+			int[][] a = matrixCreation(Math.pow(2,n));
+			int[][] b = matrixCreation(Math.pow(2,n));
 
-		// ******************************************************//
+			// ******************************************************//
 
-		System.out.println("strassen: A x B");
-		timeComplexity1 = System.currentTimeMillis();
-		int[][] C = s.multiply(a, b);		
-		timeComplexity1 = System.currentTimeMillis() - timeComplexity1;
-		System.out.println("time1 = " + timeComplexity1);
-		
+			System.out.println("strassen: A x B");
+			traditionalTime = System.currentTimeMillis();
+			s.multiply(a, b);		
+			traditionalTime = System.currentTimeMillis() - traditionalTime;
+			System.out.println("time1 = " + traditionalTime);
 
-		System.out.println("normal: A x B");
-		timeComplexity2 = System.currentTimeMillis();
-		s.traditionalMultiply(a, b);
-		//System.out.println("time = " + (System.currentTimeMillis() - timeComplexity));
-		timeComplexity2 = System.currentTimeMillis() - timeComplexity2;
-		System.out.println("time2 = " + timeComplexity2);
-		
-		n++;
 
-		// ******************************************************//
+			System.out.println("normal: A x B");
+			strassenTime = System.currentTimeMillis();
+			traditionalMultiply(a, b);
+			strassenTime = System.currentTimeMillis() - strassenTime;
+			System.out.println("time2 = " + strassenTime);
+
+			n++;
+
+			// ******************************************************//
+		}
+		breakPoint = Math.pow(2,n-1);	
+
+		System.out.println("size: " +breakPoint );
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter order n :"); 
+		int N = scan.nextInt();
+
+		System.out.println("Enter N order matrix 1\n");
+		int[][] A = new int[N][N]; 
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j <	N; j++) 
+				A[i][j] = scan.nextInt();
+
+		System.out.println("Enter N order matrix 2\n");
+		int[][] B = new int[N][N]; 
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j <	N; j++) 
+				B[i][j] = scan.nextInt();
+
+// ****************************************Algorithm 3***************************************************** //		
+		int[][] C = new int[N][N];
+
+		if(N > breakPoint){
+			C = s.multiply(A, B);
+			System.out.println("Calculating using Strassens's algorithm!");
+		}else{
+			C = traditionalMultiply(A,B);
+			System.out.println("Calculating using Traditional algorithm!");
 		}
 
-		 //int[][] C = s.multiply(A, B);
-		
-		 //System.out.println("\nProduct of matrices A and B : ");
-//		 for (int i = 0; i < a.length; i++)
-//		 {
-//		 for (int j = 0; j < a.length; j++)
-//		 System.out.print(C[i][j] +" ");
-//		 System.out.println();
-//		 }
-		
-		
-		System.out.println("size: " + Math.pow(2,n));
+		System.out.println("\nProduct of matrices A and B : ");
+		for (int i = 0; i < N; i++)
+		{
+			for (int j = 0; j < N; j++)
+				System.out.print(C[i][j] +" ");
+			System.out.println();
+		}
 
+
+	}
+	
+// ****************************************Algorithm 1***************************************************** //
+	public static void algo1(){
+		System.out.println("Inside Algo1");		
+		/*int N = 0;
+		Scanner scanner;
+		try {
+			scanner = new Scanner(new File("D:/Sem 5/Program Structure and Algorithms/Assignment 3/MatrixInputExample.txt"));
+			String line = scanner.nextLine();
+			int iA = 1;
+			int x = Integer.parseInt(line);
+			N = x-1;
+			int[] tall = new int[N];
+
+
+			while(scanner.hasNextInt()){
+				try {
+					tall[iA++] = Integer.parseInt(line);
+				}
+				catch (NumberFormatException ex) {
+					continue;
+				}
+			}				
+
+			int[][] A = new int[N/2][N/2]; 
+			int[][] B = new int[N/2][N/2];
+			int indexA = 0;
+			for (int i = 0; i < N/2; i++){ 
+				for (int j = 0; j <	N/2; j++){ 
+					A[i][j] = tall[indexA];
+					indexA++;
+				}
+			}
+
+			indexA = N - indexA;
+			for (int i = 0; i < N/2; i++) {
+				for (int j = 0; j <	N/2; j++){ 
+					A[i][j] = tall[indexA];
+					indexA++;
+				}
+			}*/
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter order n :"); 
+		int N = scan.nextInt();
+
+		System.out.println("Enter N order matrix 1\n");
+		int[][] A = new int[N][N]; 
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j <	N; j++) 
+				A[i][j] = scan.nextInt();
+
+		System.out.println("Enter N order matrix 2\n");
+		int[][] B = new int[N][N]; 
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j <	N; j++) 
+				B[i][j] = scan.nextInt();
+		
+
+		long time1 = System.currentTimeMillis();
+		traditionalMultiply(A,B);		
+		time1 = System.currentTimeMillis() - time1;
+		System.out.println("time for algo1: " + time1);
+	}
+	
+// ****************************************Algorithm 2***************************************************** //	
+	public static void algo2(){
+		System.out.println("Inside Algo12");		
+		
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter order n :"); 
+		int N = scan.nextInt();
+
+		System.out.println("Enter N order matrix 1\n");
+		int[][] A = new int[N][N]; 
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j <	N; j++) 
+				A[i][j] = scan.nextInt();
+
+		System.out.println("Enter N order matrix 2\n");
+		int[][] B = new int[N][N]; 
+		for (int i = 0; i < N; i++) 
+			for (int j = 0; j <	N; j++) 
+				B[i][j] = scan.nextInt();
+		
+
+		long time2 = System.currentTimeMillis();
+		Strassen s1 = new Strassen();
+		s1.multiply(A,B);		
+		time2 = System.currentTimeMillis() - time2;
+		System.out.println("time for algo2: " + time2);
 	}
 }
